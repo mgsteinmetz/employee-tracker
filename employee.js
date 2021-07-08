@@ -84,12 +84,12 @@ const seeOption = () => {
                 viewAllEmployees();
                 break;
 
-            case 'View all Roles':
-                viewAllRoles();
+            case 'View all Employees By Role':
+                viewByRole();
                 break;
 
-            case 'View all Departments':
-                viewAllDepartments();
+            case 'View all Employees By Department':
+                viewByDepartment();
                 break;
 
             case 'Update Employee Role':
@@ -143,7 +143,7 @@ const addEmployee = () => {
                         });
                     seeOption();
                 });
-        })
+        });
 };
 
 // ADD ROLE FUNCTION
@@ -180,6 +180,59 @@ const addRole = () => {
                                 .map((res) => res.id)[0]
                     });
                     seeOption();
-            })
-    })
+            });
+    });
+};
+
+// ADD DEPARTMENT FUNCTION
+const addDepartment = () => {
+    inquirer
+        .prompt( [
+            {
+                name: 'department',
+                type: 'input',
+                message: 'What is this department?'
+            }
+        ])
+        .then((answer) => {
+            portConnection.query(`INSERT INTO department SET ?`,
+                {
+                    department: answer.department
+                });
+                seeOption();
+        });
+};
+
+//  VIEW ALL EMPLOYEES FUNCTION
+const viewAllEmployees = () => {
+    portConnection.query(`SELECT first_name, last_name, title, salary, department FROM employee INNER JOIN role ON employee.role_id = role.id INNER JOIN department ON role.department_id = department.id;`, (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        seeOption();
+    });
+};
+
+// VIEW EMPLOYEES BY ROLE FUNCTION
+const viewByRole = () => {
+    portConnection.query(`SELECT * FROM role`, (err, res) => {
+        if (err) throw err;
+
+        inquirer.prompt([
+            {
+                name: 'viewRole',
+                type: 'list',
+                message: 'Which department do you want to view?',
+                choices: res.map((res) => res.title)
+            }
+        ])
+        .then((answer) => {
+            const {viewRole} = answer;
+
+            portConnection.query(`SELECT first_name, last_name, title, salary, department FROM employee INNER JOIN role ON employee.role_id = role.id INNER JOIN department ON role.department_id = department.id WHERE title = "${viewRole}"`, (err, res) => {
+                if (err) throw err;
+                console.table(res);
+                seeOption();
+            });
+        });
+    });
 };
