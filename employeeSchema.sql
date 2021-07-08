@@ -1,0 +1,30 @@
+-- SETTING UP DATABASE
+DROP DATABASE IF EXISTS employee_db;
+CREATE DATABASE employee_db;
+
+USE employee_db;
+
+
+-- ALL MY TABLES LISTED BELOW
+CREATE TABLE employee (
+    id INTEGER PRIMARY KEY NOT NULL,
+    first_name VARCHAR(30) NOT NULL,
+    last_name VARCHAR(30) NOT NULL,
+    role_id INTEGER NOT NULL,
+    manager_id INTEGER,
+    FOREIGN KEY (role_id) REFERENCES role(id) ON DELETE CASCADE,
+    FOREIGN KEY (manager_id) REFERENCES employee(id) ON DELETE CASCADE
+);
+
+CREATE TABLE role (
+    id INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    title VARCHAR(30) NOT NULL,
+    salary DECIMAL(9,2) NOT NULL,
+    department_id INTEGER NOT NULL,
+    FOREIGN KEY (department_id) REFERENCES department(id) ON DELETE CASCADE
+);
+
+CREATE TABLE department (
+    id INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    name VARCHAR(30) NOT NULL
+);
