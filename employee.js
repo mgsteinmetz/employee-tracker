@@ -236,3 +236,29 @@ const viewByRole = () => {
         });
     });
 };
+
+// VIEW BY DEPARTMENT FUNCTION
+const viewByDepartment = () => {
+    portConnection.query(`SELECT * FROM department`, (err, res) => {
+        if (err) throw err;
+
+        inquirer
+            .prompt([
+                {
+                    name: 'viewDepartment',
+                    type: 'list',
+                    message: 'Which department do you want to view?',
+                    choices: res.map((res) => res.department)
+                }
+            ])
+            .then((answer) => {
+                const {viewDepartment} = answer;
+
+                portConnection.query(`SELECT first_name, last_name, title, salary, department FROM employee INNER JOIN role ON employee.role_id = role.id INNER JOIN department ON role.department_id = department.id WHERE department = "${viewDepartment}"`, (err, res) => {
+                    if (err) throw err;
+                    console.table(res);
+                    seeOption();
+                });
+            });
+    });
+};
