@@ -1,5 +1,5 @@
 // ADDING DEPENDENCIES
-const dotenv = require('dotenv').congig();
+const dotenv = require('dotenv').config();
 const consoleTable = require('console.table');
 const inquirer = require('inquirer');
 const mysql = require('mysql');
@@ -17,30 +17,6 @@ const portConnection = mysql.createConnection( {
 
     database: 'employee_db'
 });
-
-// FUNCTION DISPLAYING BIG TITLE OVERLAY
-const begin = () => {
-    console.log(`
-        - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-        |                                                     |
-        |    _____                 _                          |
-        |   | ____|_ __ ___  _ __ | | ___  _   _  ___  ___    |
-        |   |  _| | '_ ' _ \| '_ \| |/ _ \| | | |/ _ \/ _ \   |
-        |   | |___| | | | | | |_) | | (_) | |_| |  __/  __/   |
-        |   |_____|_| |_| |_| .__/|_|\___/ \__, |\___|\___|   |
-        |                   |_|            |___/              |
-        |    __  __                                           |
-        |   |  \/  | __ _ _ __   __ _  __ _  ___ _ __         |
-        |   | |\/| |/ _' | '_ \ / _' |/ _' |/ _ \ '__|        |
-        |   | |  | | (_| | | | | (_| | (_| |  __/ |           |
-        |   |_|  |_|\__,_|_| |_|\__,_|\__, |\___|_|           |
-        |                             |___/                   |
-        |                                                     |
-        | _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-    `);
-
-    seeOption();
-};
 
 // FUNCTION FOR INPUT ACTIONS
 const seeOption = () => {
