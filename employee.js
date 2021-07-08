@@ -217,7 +217,7 @@ const viewByRole = () => {
     portConnection.query(`SELECT * FROM role`, (err, res) => {
         if (err) throw err;
 
-        inquirer.prompt([
+        inquirer.prompt( [
             {
                 name: 'viewRole',
                 type: 'list',
@@ -243,7 +243,7 @@ const viewByDepartment = () => {
         if (err) throw err;
 
         inquirer
-            .prompt([
+            .prompt( [
                 {
                     name: 'viewDepartment',
                     type: 'list',
@@ -260,5 +260,37 @@ const viewByDepartment = () => {
                     seeOption();
                 });
             });
+    });
+};
+
+// UPDATE EMPLOYEE ROLE FUNCTION
+const updateEmployeeRole = () => {
+    portConnection.query(`SELECT * FROM role`, (err, res) => {
+        portConnection.query(`SELECT * FROM employee`, (err, res2) => {
+            if (err) throw err;
+
+            inquirer
+                .prompt( [
+                    {
+                        name: 'employee',
+                        type: 'rawlist',
+                        message: 'Which employee do you want to update?',
+                        choices: res2.map((employee) => `${employee.first_name} ${employee.last_name}`)
+                    },
+                    {
+                        name: 'role',
+                        type: 'rawlist',
+                        message: `What is their role?`,
+                        choices: res.map((role) => role.title)
+                    }
+                ])
+                .then((answer) => {
+                    const roleNum = res.filter((role) => role.title === answer.role).map((role) => role.id)[0];
+                    const firstName = answer.employee.split('')[0];
+                    const lastName = answer.employee.split('')[1];
+                    portConnection.query(`UPDATE employee SET role_id= ${roleNum} WHERE first_name= ${firstName} AND last_name= ${lastName}`)
+                    seeOption();
+                });
+        });
     });
 };
