@@ -3,7 +3,6 @@ const dotenv = require('dotenv').congig();
 const consoleTable = require('console.table');
 const inquirer = require('inquirer');
 const mysql = require('mysql');
-const { Action } = require('rxjs/internal/scheduler/Action');
 
 // PORT
 const portConnection = mysql.createConnection( {
@@ -66,4 +65,63 @@ const seeOption = () => {
             'DONE'
         ],
     })
-}
+    .then((answer) => {
+        switch (answer.option) {
+            case 'Add Employee':
+                addEmployee();
+                break;
+
+            case 'Add Role':
+                addRole();
+                break;
+
+            case 'Add Department':
+                addDepartment();
+                break;
+
+            case 'View all Employees':
+                viewAllEmployees();
+                break;
+
+            case 'View all Roles':
+                viewAllRoles();
+                break;
+
+            case 'View all Departments':
+                viewAllDepartments();
+                break;
+
+            case 'Update Employee Role':
+                updateEmployeeRole();
+                break;
+
+            case 'Update Employee Manager':
+                updateEmployeeManager();
+                break;
+
+            case 'View all Employees by Department':
+                viewByDepartment();
+                break;
+
+            case 'View all Employees by Manager':
+                viewByManager();
+                break;
+
+            case 'Remove Employee':
+                removeEmployee();
+                break;
+
+            case 'Remove Role':
+                removeRole();
+                break;
+
+            case 'Remove Department':
+                removeDepartment();
+                break;
+
+            case 'DONE':
+                portConnection.end();
+                break;
+        }
+    });
+};
