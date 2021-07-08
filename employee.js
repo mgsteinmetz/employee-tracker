@@ -140,9 +140,46 @@ const addEmployee = () => {
                             if (err) throw err;
                             console.log('Employee successfully added.');
 
-                        }
-                    );
+                        });
                     seeOption();
                 });
         })
+};
+
+// ADD ROLE FUNCTION
+const addRole = () => {
+    portConnection.query(`SELECT * FROM department`, (err, res) => {
+        if (err) throw err;
+
+        inquirer
+            .prompt( [
+                {
+                    name: 'role',
+                    type: 'input',
+                    message: 'What is the name of this role?'
+                },
+                {
+                    name: 'salary',
+                    type: 'input',
+                    message: 'What is the salary of this role?'
+                },
+                {
+                    name: 'departmentNum',
+                    type: 'rawlist',
+                    message: 'What is the department?',
+                    choices: res.map((res) => res.department)
+                }
+            ])
+            .then((answer) => {
+                portConnection.query(`INSERT INTO role SET ?`,
+                    {
+                        title: answer.role,
+                        salary: answer.salary,
+                        department: res
+                                .filter((res) => res.department === answer.departmentNum)
+                                .map((res) => res.id)[0]
+                    });
+                    seeOption();
+            })
+    })
 };
