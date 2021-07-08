@@ -28,3 +28,28 @@ CREATE TABLE department (
     id INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL,
     name VARCHAR(30) NOT NULL
 );
+
+-- ADDING INPUT OPTIONS FOR TABLES
+INSERT INTO employee
+    (first_name, last_name, role_id, manager_id)
+values
+    ('MIKE', 'STEINMETZ', 1, NULL);
+
+INSERT INTO role
+    (title, salary, department_id)
+values
+    ('SALES LEAD', 100000, 1),
+    ('SALESPERSON', 80000, 1),
+    ('LEAD ENGINEER', 150000, 2),
+    ('SOFTWARE ENGINEER', 120000, 2),
+    ('ACCOUNTANT', 125000, 3),
+    ('LEGAL TEAM LEAD', 250000, 4),
+    ('LAWYER', 190000, 4);
+
+INSERT INTO department  
+    (name)
+values
+    ('SALES')
+    ('ENGINEERING')
+    ('FINCANCE')
+    ('LEGAL');
