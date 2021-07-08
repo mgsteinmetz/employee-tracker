@@ -3,6 +3,7 @@ const dotenv = require('dotenv').congig();
 const consoleTable = require('console.table');
 const inquirer = require('inquirer');
 const mysql = require('mysql');
+const { resourceLimits } = require('worker_threads');
 
 // PORT
 const portConnection = mysql.createConnection( {
@@ -124,4 +125,85 @@ const seeOption = () => {
                 break;
         }
     });
+};
+
+// ADDING EMPLOYEE FUNCTION
+const addEmployee = () => {
+    portConnection.query(`SELECT * FROM role`, (err , res) => {
+        if (err) throw err;
+        portConnection.query(`SELECT * FROM employee`, (err, res2) => {
+            if (err) throw err;
+
+            inquirer
+                .prompt( [ 
+                    {
+                        name: 'addFirstName',
+                        type: 'input',
+                        message: 'What is their first name?'
+                    },
+                    {
+                        name: 'addLastName',
+                        type: 'input',
+                        message: 'What is their last name?'
+                    },
+                    {
+                        name: 'addRole',
+                        type: 'rawlist',
+                        choices() {
+                            const choiceList = [];
+                            res.forEach(({title}) => {
+                                choiceList.push(title);
+                            });
+                            return choiceList;
+                        },
+                        message: 'What is their role?',
+                    },
+                    {
+                        name: 'addManager',
+                        type: 'rawlist',
+                        choices() {
+                            const choiceList = ['None'];
+                            res2.forEach(({first_name, last_name}) => {
+                                let employeeName = first_name + '' + last_name;
+                                choiceList.push(employeeName);
+                            });
+                            return choiceList;
+                        },
+                        message: 'Who is their manager?',
+                    }
+                ])
+                .then((answer) => {
+                    let correctRole;
+                    res.forEach((role) => {
+                        if (role.title === answer.addRole) {
+                            correctRole = role;
+                        }
+                    });
+
+                    let correctManager;
+                    res2.forEach((employee) => {
+                        if ((employee.first_name + '' + employee.last_name) === answer.addManager) {
+                            correctManager = employee;
+                        } else if (answer.addManager === 'None') {
+                            correctManager = '';
+                        }
+                    });
+
+                    portConnection.query(`INSERT INTO employee SET ?`,
+                        {
+                            first_name: answer.addFirstName,
+                            last_name: answer.addLastName,
+                            role_id: correctRole.id,
+                            manager_id: correctManager.id,
+                        },
+                        (err) => {
+                            if (err) throw err;
+                            console.log('Employee successfully added.');
+
+                            seeOption();
+                        }
+                    );
+                });
+        })
+    })
 };
