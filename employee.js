@@ -96,30 +96,6 @@ const seeOption = () => {
                 updateEmployeeRole();
                 break;
 
-            case 'Update Employee Manager':
-                updateEmployeeManager();
-                break;
-
-            case 'View all Employees by Department':
-                viewByDepartment();
-                break;
-
-            case 'View all Employees by Manager':
-                viewByManager();
-                break;
-
-            case 'Remove Employee':
-                removeEmployee();
-                break;
-
-            case 'Remove Role':
-                removeRole();
-                break;
-
-            case 'Remove Department':
-                removeDepartment();
-                break;
-
             case 'DONE':
                 portConnection.end();
                 break;
@@ -131,8 +107,6 @@ const seeOption = () => {
 const addEmployee = () => {
     portConnection.query(`SELECT * FROM role`, (err , res) => {
         if (err) throw err;
-        portConnection.query(`SELECT * FROM employee`, (err, res2) => {
-            if (err) throw err;
 
             inquirer
                 .prompt( [ 
@@ -149,61 +123,26 @@ const addEmployee = () => {
                     {
                         name: 'addRole',
                         type: 'rawlist',
-                        choices() {
-                            const choiceList = [];
-                            res.forEach(({title}) => {
-                                choiceList.push(title);
-                            });
-                            return choiceList;
-                        },
                         message: 'What is their role?',
+                        choices: res.map((role) => role.title)
                     },
-                    {
-                        name: 'addManager',
-                        type: 'rawlist',
-                        choices() {
-                            const choiceList = ['None'];
-                            res2.forEach(({first_name, last_name}) => {
-                                let employeeName = first_name + '' + last_name;
-                                choiceList.push(employeeName);
-                            });
-                            return choiceList;
-                        },
-                        message: 'Who is their manager?',
-                    }
                 ])
                 .then((answer) => {
-                    let correctRole;
-                    res.forEach((role) => {
-                        if (role.title === answer.addRole) {
-                            correctRole = role;
-                        }
-                    });
-
-                    let correctManager;
-                    res2.forEach((employee) => {
-                        if ((employee.first_name + '' + employee.last_name) === answer.addManager) {
-                            correctManager = employee;
-                        } else if (answer.addManager === 'None') {
-                            correctManager = '';
-                        }
-                    });
-
                     portConnection.query(`INSERT INTO employee SET ?`,
                         {
                             first_name: answer.addFirstName,
                             last_name: answer.addLastName,
-                            role_id: correctRole.id,
-                            manager_id: correctManager.id,
+                            role_id: res
+                                .filter((res) => res.title === answer.role)
+                                .map((res) => res.id)[0]
                         },
                         (err) => {
                             if (err) throw err;
                             console.log('Employee successfully added.');
 
-                            seeOption();
                         }
                     );
+                    seeOption();
                 });
         })
-    })
 };
