@@ -58,3 +58,7 @@ VALUES
     ('ENGINEERING')
     ('FINCANCE')
     ('LEGAL');
+
+SELECT * FROM employee;
+SElECT * FROM roles;
+SElECT * FROM department;
