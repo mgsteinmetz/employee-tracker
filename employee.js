@@ -78,7 +78,7 @@ const seeOption = () => {
         }
     });
 };
-
+seeOption();
 // ADDING EMPLOYEE FUNCTION
 const addEmployee = () => {
     portConnection.query(`SELECT * FROM roles`, (err , res) => {
@@ -181,7 +181,7 @@ const addDepartment = () => {
 
 //  VIEW ALL EMPLOYEES FUNCTION
 const viewAllEmployees = () => {
-    portConnection.query(`SELECT e1.id e1.first_name, e1.last_name, r.title, r.salary, d.department FROM employee INNER JOIN roles ON employee.role_id = role.id INNER JOIN department ON role.department_id = department.id;`, (err, res) => {
+    portConnection.query("SELECT first_name, last_name, title, salary, department FROM employees INNER JOIN roles ON employees.role_id = role.r_id INNER JOIN departments ON roles.department_id = department.d_id;", (err, res) => {
         if (err) throw err;
         console.table(res);
         seeOption();
@@ -204,7 +204,7 @@ const viewByRole = () => {
         .then((answer) => {
             const {viewRole} = answer;
 
-            portConnection.query(`SELECT first_name, last_name, title, salary, department FROM employee INNER JOIN roles ON employee.role_id = role.id INNER JOIN department ON role.department_id = department.id WHERE title = "${viewRole}"`, (err, res) => {
+            portConnection.query(`SELECT first_name, last_name, title, salary, department FROM employees INNER JOIN roles ON employees.role_id = role.r_id INNER JOIN departments ON roles.department_id = department.d_id WHERE title= '${viewRole}';`, (err, res) => {
                 if (err) throw err;
                 console.table(res);
                 seeOption();
@@ -230,7 +230,7 @@ const viewByDepartment = () => {
             .then((answer) => {
                 const {viewDepartment} = answer;
 
-                portConnection.query(`SELECT first_name, last_name, title, salary, department FROM employee INNER JOIN roles ON employee.role_id = role.id INNER JOIN department ON role.department_id = department.id WHERE department = "${viewDepartment}"`, (err, res) => {
+                portConnection.query(`SELECT first_name, last_name, title, salary, department FROM employees INNER JOIN roles ON employees.role_id = role.r_id INNER JOIN departments ON roles.department_id = department.d_id WHERE department= '${viewDepartment}';`, (err, res) => {
                     if (err) throw err;
                     console.table(res);
                     seeOption();

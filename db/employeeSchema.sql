@@ -6,7 +6,7 @@ USE employee_db;
 
 
 -- ALL MY TABLES LISTED BELOW
-CREATE TABLE employee (
+CREATE TABLE employees (
     id INT NOT NULL AUTO_INCREMENT,
     first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE roles (
 	PRIMARY KEY(r_id)
 );
 
-CREATE TABLE department (
+CREATE TABLE departments (
     d_id INT NOT NULL AUTO_INCREMENT,
 	department VARCHAR(30),
     PRIMARY KEY(d_id)
@@ -30,7 +30,7 @@ CREATE TABLE department (
 
 
 -- ADDING INPUT OPTIONS FOR TABLES
-INSERT INTO employee (first_name, last_name, role_id)
+INSERT INTO employees (first_name, last_name, role_id)
 VALUES
     ('MIKE', 'STEINMETZ', 1),
     ('ADAM', 'THIELEN', 2),
@@ -51,13 +51,13 @@ VALUES
     ('LEGAL TEAM LEAD', 250000, 4),
     ('LAWYER', 190000, 4);
 
-INSERT INTO department (name)
+INSERT INTO departments (name)
 VALUES
     ('SALES')
     ('ENGINEERING')
     ('FINCANCE')
     ('LEGAL');
 
-SELECT * FROM employee;
+SELECT * FROM employees;
 SElECT * FROM roles;
-SElECT * FROM department;
+SElECT * FROM departments;
