@@ -7,25 +7,25 @@ USE employee_db;
 
 -- ALL MY TABLES LISTED BELOW
 CREATE TABLE employee (
-    id INTEGER PRIMARY KEY NOT NULL,
+    id INT NOT NULL AUTO_INCREMENT,
     first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
-    role_id INTEGER NOT NULL,
-    FOREIGN KEY (role_id) REFERENCES role(id),
-    FOREIGN KEY (manager_id) REFERENCES employee(id)
+    roles_id INT,
+	PRIMARY KEY(id)
 );
 
-CREATE TABLE role (
-    id INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    title VARCHAR(30) NOT NULL,
-    salary DECIMAL(9,2) NOT NULL,
-    department_id INTEGER NOT NULL,
-    FOREIGN KEY (department_id) REFERENCES department(id)
+CREATE TABLE roles (
+    r_id INT NOT NULL AUTO_INCREMENT,
+    title VARCHAR(30),
+    salary INT,
+    departments_id INT,
+	PRIMARY KEY(r_id)
 );
 
 CREATE TABLE department (
-    id INTEGER AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    name VARCHAR(30) NOT NULL
+    d_id INT NOT NULL AUTO_INCREMENT,
+	department VARCHAR(30),
+    PRIMARY KEY(d_id)
 );
 
 
@@ -41,7 +41,7 @@ VALUES
     ('DALVIN', 'TOMLINSON', 6),
     ('DANIELLE', 'HUNTER', 7);
 
-INSERT INTO role (title, salary, department_id)
+INSERT INTO roles (title, salary, department_id)
 VALUES
     ('SALES LEAD', 100000, 1),
     ('SALESPERSON', 80000, 1),

@@ -9,38 +9,38 @@ const { resourceLimits } = require('worker_threads');
 const portConnection = mysql.createConnection( {
     host: process.env.DB_HOST,
 
-    port: 3001,
+    port: 3306,
 
     user: process.env.DB_USER,
 
     password: process.env.DB_PASS,
 
-    database: 'employee_db'
+    database: process.env.DB_NAME
 });
 
 // FUNCTION FOR INPUT ACTIONS
 const seeOption = () => {
     inquirer
-    .prompt( {
-        name: 'option',
-        type: 'list',
-        message: 'What would you like to do?',
-        choices: [
-            'Add Employee',
-            'Add Role',
-            'Add Department',
-            'View all Employees',
-            'View all Roles',
-            'View all Departments',
-            'Update Employee Role',
-            'Update Employee Manager',
-            'View all Employees by Department',
-            'View all Employees by Manager',
-            'Remove Employee',
-            'Remove Role',
-            'Remove Department',
-            'DONE'
-        ],
+        .prompt( {
+            name: 'option',
+            type: 'list',
+            message: 'What would you like to do?',
+            choices: [
+                'Add Employee',
+                'Add Role',
+                'Add Department',
+                'View all Employees',
+                'View all Roles',
+                'View all Departments',
+                'Update Employee Role',
+                'Update Employee Manager',
+                'View all Employees by Department',
+                'View all Employees by Manager',
+                'Remove Employee',
+                'Remove Role',
+                'Remove Department',
+                'DONE'
+            ],
     })
     .then((answer) => {
         switch (answer.option) {
@@ -110,7 +110,7 @@ const addEmployee = () => {
                             last_name: answer.addLastName,
                             role_id: res
                                 .filter((res) => res.title === answer.role)
-                                .map((res) => res.id)[0]
+                                .map((res) => res.r_id)[0]
                         },
                         (err) => {
                             if (err) throw err;
@@ -153,7 +153,7 @@ const addRole = () => {
                         salary: answer.salary,
                         department: res
                                 .filter((res) => res.department === answer.departmentNum)
-                                .map((res) => res.id)[0]
+                                .map((res) => res.d_id)[0]
                     });
                     seeOption();
             });
@@ -181,7 +181,7 @@ const addDepartment = () => {
 
 //  VIEW ALL EMPLOYEES FUNCTION
 const viewAllEmployees = () => {
-    portConnection.query(`SELECT first_name, last_name, title, salary, department FROM employee INNER JOIN roles ON employee.role_id = role.id INNER JOIN department ON role.department_id = department.id;`, (err, res) => {
+    portConnection.query(`SELECT e1.id e1.first_name, e1.last_name, r.title, r.salary, d.department FROM employee INNER JOIN roles ON employee.role_id = role.id INNER JOIN department ON role.department_id = department.id;`, (err, res) => {
         if (err) throw err;
         console.table(res);
         seeOption();
